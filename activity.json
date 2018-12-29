@@ -1,0 +1,21 @@
+{
+  "name": "avgTemp",
+  "version": "0.0.1",
+  "type": "flogo:activity",
+  "description": "activity description",
+  "title": "Calc avg temp in the global attributes",
+  "ref": "github.com/kasim/avgTemp",
+  "author": "Steven Chu <chu.chongmeng@gmail.com>",
+  "inputs":[
+    {
+      "name": "attributes",
+      "type": "array"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "avgTemp",
+      "type": "number"
+    }
+  ]
+}
