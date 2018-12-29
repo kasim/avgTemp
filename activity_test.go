@@ -58,6 +58,8 @@ func TestEval(t *testing.T) {
 
 	//setup attrs
 	tc.SetInput("attributes", attributes)
+	tc.SetInput("operator", "GT")
+	tc.SetInput("threshold", 25.0)
 
 	dt, _ := data.ToTypeEnum("float64")
 	//data.GetGlobalScope().AddAttr("d1", dt, 25.6)
@@ -67,9 +69,13 @@ func TestEval(t *testing.T) {
 
 	act.Eval(tc)
 
-	result := tc.GetOutput("avgTemp")
+	result := tc.GetOutput("result").(bool)
 
-	assert.Equal(t, result, ((25.6 + 24.3 + 27.8)/float64(3)));
+	assert.Equal(t, result, true);
+
+	typedVal, _ := data.GetGlobalScope().GetAttr("avgTemp")
+
+	assert.Equal(t, result, typedVal.Value())
 
 	//check result attr
 }

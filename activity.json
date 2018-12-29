@@ -9,13 +9,25 @@
   "inputs":[
     {
       "name": "attributes",
-      "type": "array"
+      "type": "array",
+      "required": true
+    },
+    {
+      "name": "operator",
+      "type": "string",
+      "required": true,
+      "allowed": ["GT", "GE", "EQ", "LT", "LE"]
+    },
+    {
+      "name": "threshold",
+      "type": "number",
+      "required": true
     }
   ],
   "outputs": [
     {
-      "name": "avgTemp",
-      "type": "number"
+      "name": "result",
+      "type": "bool"
     }
   ]
 }
