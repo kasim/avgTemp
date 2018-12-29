@@ -6,6 +6,7 @@ import (
 
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
+	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,14 +49,22 @@ func TestEval(t *testing.T) {
 	act := NewActivity(getActivityMetadata())
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
+	attributes := []string {"t1", "t2", "t3"}
+
 	//setup attrs
-	tc.SetInput("attributes", [3]string{"t1", "t2", "t3"})
+	tc.SetInput("attributes", attributes)
+
+	dt, _ := data.ToTypeEnum("float64")
+	//data.GetGlobalScope().AddAttr("d1", dt, 25.6)
+	data.GetGlobalScope().AddAttr("t1", dt, 25.6)
+	data.GetGlobalScope().AddAttr("t2", dt, 24.3)
+	data.GetGlobalScope().AddAttr("t3", dt, 27.8)
 
 	act.Eval(tc)
 
 	result := tc.GetOutput("avgTemp")
 
-	assert.Equal(t, result, 0.0);
+	assert.Equal(t, result, ((25.6 + 24.3 + 27.8)/float64(3)));
 
 	//check result attr
 }

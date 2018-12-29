@@ -1,8 +1,11 @@
 package avgTemp
 
 import (
+	"fmt"
 	"reflect"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
+	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 )
 
@@ -25,13 +28,44 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 
 // Eval implements activity.Activity.Eval
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
-	attributes := context.GetInput("attributes")
+	input := context.GetInput("attributes")
+
+	attributes := input.([]string)
+	avg := 0.0
+	sum := 0.0 
+	completed := true
+	breakpoint := -1
 
 	log.Infof("%-v", attributes)
 	typeAttr := reflect.TypeOf(attributes).Kind()
-	log.Infof("%T: %s\n", typeAttr, typeAttr)
-
-	context.SetOutput("avgTemp", 0.0)
+	log.Infof("%T: %s", typeAttr, typeAttr)
+	log.Infof("attributes: %v", attributes)
+	for n := range attributes{
+		typedVal, ok := data.GetGlobalScope().GetAttr(attributes[n])
+		if !ok {
+			errorMsg := fmt.Sprintf("Attribute not defined: '%s'", attributes[n])
+			log.Error(errorMsg)
+			return false, activity.NewError(errorMsg, "", nil)
+		}
+		log.Infof("typedVal.Value(): %v", typedVal.Value())
+		if (typedVal.Value().(float64) == 0.0) {
+			breakpoint = n 
+			completed = false
+			break;
+		}
+		sum += typedVal.Value().(float64) 
+	}
+	if (completed) {
+		avg = sum / float64(len(attributes))
+		log.Infof("float64 of attributes: %v", float64(len(attributes)))
+		log.Infof("sum temperature: %v", sum)
+		log.Infof("avg temperature: %v", avg)
+	} else {
+		errorMsg := fmt.Sprintf("Not all temperatures are recorded, missed [%s]!", attributes[breakpoint])
+		log.Error(errorMsg)
+		return false, activity.NewError(errorMsg, "", nil)
+	}
+	context.SetOutput("avgTemp", avg)
 
 	return true, nil
 }
