@@ -30,7 +30,7 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 	input := context.GetInput("attributes")
 
-	attributes := input.([]string)
+	attributes := input.([]interface {})
 	avg := 0.0
 	sum := 0.0 
 	completed := true
@@ -40,8 +40,8 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 	typeAttr := reflect.TypeOf(attributes).Kind()
 	log.Infof("%T: %s", typeAttr, typeAttr)
 	log.Infof("attributes: %v", attributes)
-	for n := range attributes{
-		typedVal, ok := data.GetGlobalScope().GetAttr(attributes[n])
+	for n, a := range attributes{
+		typedVal, ok := data.GetGlobalScope().GetAttr(a.(string))
 		if !ok {
 			errorMsg := fmt.Sprintf("Attribute not defined: '%s'", attributes[n])
 			log.Error(errorMsg)

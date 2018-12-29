@@ -49,7 +49,12 @@ func TestEval(t *testing.T) {
 	act := NewActivity(getActivityMetadata())
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
-	attributes := []string {"t1", "t2", "t3"}
+	attrs := []string{"t1", "t2", "t3"}
+	attributes := make([]interface{}, 3)
+
+	for i, s := range attrs {
+		attributes[i] = s
+	}
 
 	//setup attrs
 	tc.SetInput("attributes", attributes)
