@@ -1,6 +1,7 @@
 package avgTemp
 
 import (
+	"reflect"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 )
@@ -27,6 +28,8 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 	attributes := context.GetInput("attributes")
 
 	log.Infof("%-v", attributes)
+	typeAttr := reflect.TypeOf(attributes).Kind()
+	log.Infof("%T: %s\n", typeAttr, typeAttr)
 
 	context.SetOutput("avgTemp", 0.0)
 

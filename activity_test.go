@@ -49,7 +49,7 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
 	//setup attrs
-	tc.SetInput("attributes", "{\"t1\", \"t2\", \"t3\"}")
+	tc.SetInput("attributes", [3]string{"t1", "t2", "t3"})
 
 	act.Eval(tc)
 
